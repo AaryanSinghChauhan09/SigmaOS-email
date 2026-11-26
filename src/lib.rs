@@ -43,14 +43,20 @@ pub struct Message {
 impl Message {
     /// Header lookup, case-insensitive.
     pub fn header(&self, name: &str) -> Option<&str> {
-        self.headers.get(&name.to_ascii_lowercase()).map(String::as_str)
+        self.headers
+            .get(&name.to_ascii_lowercase())
+            .map(String::as_str)
     }
 
     /// Sender address from `From:` (raw, unvalidated).
-    pub fn from(&self) -> Option<&str> { self.header("from") }
+    pub fn from(&self) -> Option<&str> {
+        self.header("from")
+    }
 
     /// Subject line.
-    pub fn subject(&self) -> Option<&str> { self.header("subject") }
+    pub fn subject(&self) -> Option<&str> {
+        self.header("subject")
+    }
 
     /// Whether the message appears to be multipart MIME.
     pub fn is_multipart(&self) -> bool {
@@ -67,7 +73,10 @@ impl Message {
 pub fn parse(raw: &str) -> Result<Message, EmailError> {
     let (head, body) = split_head_body(raw);
     let headers = parse_headers(head)?;
-    Ok(Message { headers, body: body.to_string() })
+    Ok(Message {
+        headers,
+        body: body.to_string(),
+    })
 }
 
 fn split_head_body(raw: &str) -> (&str, &str) {
